@@ -111,15 +111,23 @@ app.put("/addComment/:id", (req, res) => {
 
 app.get("/status/open", (req, res) => {
   const open = bd.filter((processo) => processo.status === "Em andamento");
-  console.log(bd);
   return res.status(200).json(open);
 });
 
 app.get("/status/close", (req, res) => {
-  const open = bd.filter((processo) => processo.status === "Finalizado");
-  console.log(bd);
-  return res.status(200).json(open);
+  const close = bd.filter((processo) => processo.status === "Finalizado");
+  return res.status(200).json(close);
 });
+
+// Bônus
+app.get("/setor/:nomeSetor", (req, res) => {
+  const { nomeSetor } = req.params;
+  const processosSetor = bd.filter((processo) => processo.setor === nomeSetor);
+  return res.status(200).json(processosSetor);
+});
+
+app.get("/random", (req, res) => res.status(200).json(bd[(Math.floor(Math.random() * bd.length))])
+);
 
 app.listen(PORT, () => {
   console.log(`Listening port ${PORT}`);
