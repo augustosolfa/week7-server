@@ -52,6 +52,18 @@ app.use(express.json());
 app.get("/all", (req, res) => res.status(200).json(bd));
 
 app.post("/create", (req, res) => {
+  if (!req.body) {
+    return res.status(400).json("Não foram enviados dados.")
+  }
+  const camposAusentes = [];
+  for (let index in bd[0]) {
+    if (!(index in req.body) && index !== "id") {
+      camposAusentes.push(index);
+    }
+  }
+  if (camposAusentes.length > 0) {
+    return res.status(400).json({camposAusentes: camposAusentes})
+  }
   const processo = { id: crypto.randomUUID(), ...req.body };
   bd.push(processo);
   return res.status(201).json(processo.id);
