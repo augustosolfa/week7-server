@@ -28,14 +28,44 @@ const processoSchema = new Schema(
     },
     details: {
       type: String,
-      trim: true
+      trim: true,
     },
     dateInit: {
       type: Date,
       required: true,
+      set: (d) => {
+        const [day, month, year] = d.split("/");
+        return new Date(+year, month - 1, +day);
+      },
+      get: (d) => {
+        if (!d) {
+          return null;
+        }
+        function pad(number) {
+          return number < 10 ? "0" + number : number;
+        }
+        return [pad(d.getDate()), pad(d.getMonth() + 1), d.getFullYear()].join(
+          "/"
+        );
+      },
     },
     dateEnd: {
       type: Date,
+      set: (d) => {
+        const [day, month, year] = d.split("/");
+        return new Date(+year, month - 1, +day);
+      },
+      get: (d) => {
+        if (!d) {
+          return null;
+        }
+        function pad(number) {
+          return number < 10 ? "0" + number : number;
+        }
+        return [pad(d.getDate()), pad(d.getMonth() + 1), d.getFullYear()].join(
+          "/"
+        );
+      },
     },
     comments: [
       {
@@ -48,15 +78,15 @@ const processoSchema = new Schema(
     setor: {
       type: String,
       required: true,
-      trim: true
-    }
+      trim: true,
+    },
   },
   {
     timestamps: true,
+    toJSON: { getters: true },
   }
 );
 
-
-const ProcessoModel = model("Processo", processoSchema);
+const ProcessoModel = new model("Processo", processoSchema);
 
 export default ProcessoModel;
